@@ -1,0 +1,41 @@
+camel:
+  main:
+    name: CamelMcpGateway
+  servlet:
+    mapping:
+      context-path: /*
+  rest:
+    context-path: /
+
+server:
+  port: 8080
+
+spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+app:
+  mcp-gateway:
+    services:
+      - name: objects-service
+        base-url: https://api.restful-api.dev
+        openapi-path: classpath:openapi/restful-api.json
+
+      - name: pokemons
+        base-url: https://pokeapi.co/api/v2
+        openapi-path: classpath:openapi/pokeapi.yaml
+
+    mcp:
+      endpoint: /mcp
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,camelroutes
+  endpoint:
+    health:
+      access: read_only
+    camelroutes:
+      read-only: true

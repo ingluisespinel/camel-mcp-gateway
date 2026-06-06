@@ -1,0 +1,214 @@
+### ============================================
+### Camel MCP Gateway — Requests de prueba
+### ============================================
+### Servidor: http://localhost:8080
+### Endpoints:
+###   POST /mcp  → JSON-RPC (Camel REST DSL)
+###   GET  /mcp/sse → SSE Transport (Spring MVC)
+###   POST /mcp/message?sessionId=... → Mensajes SSE
+### ============================================
+### 1. tools/list — Listar herramientas disponibles
+POST http://localhost:8080/mcp
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/list",
+  "id": 1
+}
+
+### 2. tools/call — Listar objetos (objects-service)
+POST http://localhost:8080/mcp
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "id": 2,
+  "params": {
+    "name": "objects-service_listObjects",
+    "arguments": {}
+  }
+}
+
+### 3. tools/call — Obtener objeto por ID
+POST http://localhost:8080/mcp
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "id": 3,
+  "params": {
+    "name": "objects-service_getObjectById",
+    "arguments": {
+      "id": "1"
+    }
+  }
+}
+
+### 4. tools/call — Crear objeto
+POST http://localhost:8080/mcp
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "id": 4,
+  "params": {
+    "name": "objects-service_createObject",
+    "arguments": {
+      "body": {
+        "name": "Mi Objeto",
+        "data": {
+          "color": "rojo",
+          "price": 42.5
+        }
+      }
+    }
+  }
+}
+
+### 5. tools/call — Eliminar objeto
+POST http://localhost:8080/mcp
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "id": 5,
+  "params": {
+    "name": "objects-service_deleteObject",
+    "arguments": {
+      "id": "1"
+    }
+  }
+}
+
+### 6. tools/call — Listar Pokémon
+POST http://localhost:8080/mcp
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "id": 6,
+  "params": {
+    "name": "pokemons_listPokemon",
+    "arguments": {
+      "limit": 5,
+      "offset": 0
+    }
+  }
+}
+
+### 7. tools/call — Obtener Pokémon por nombre
+POST http://localhost:8080/mcp
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "id": 7,
+  "params": {
+    "name": "pokemons_getPokemonByName",
+    "arguments": {
+      "name": "ditto"
+    }
+  }
+}
+
+### 8. tools/call — Obtener Pokémon por ID
+POST http://localhost:8080/mcp
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "id": 8,
+  "params": {
+    "name": "pokemons_getPokemonById",
+    "arguments": {
+      "id": 132
+    }
+  }
+}
+
+### 9. Error: Método no soportado
+POST http://localhost:8080/mcp
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "resources/list",
+  "id": 9
+}
+
+### 10. Error: Tool name inválido
+POST http://localhost:8080/mcp
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "id": 10,
+  "params": {
+    "name": "servicio_inexistente",
+    "arguments": {}
+  }
+}
+
+### 11. Error: params sin name
+POST http://localhost:8080/mcp
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "id": 11,
+  "params": {
+    "arguments": {}
+  }
+}
+
+### ============================================
+### SSE Transport
+### ============================================
+### 12. SSE — Establecer conexión
+GET http://localhost:8080/mcp/sse
+Accept: text/event-stream
+
+### [Nota: La respuesta SSE devuelve un event: endpoint con
+###  la URL /mcp/message?sessionId=<UUID>. Copia ese sessionId
+###  para las siguientes requests.]
+
+### 13. SSE — Enviar tools/list (reemplaza <sessionId>)
+POST http://localhost:8080/mcp/message?sessionId=<sessionId>
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/list",
+  "id": 1
+}
+
+### 14. SSE — Enviar tools/call (reemplaza <sessionId>)
+POST http://localhost:8080/mcp/message?sessionId=<sessionId>
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "id": 2,
+  "params": {
+    "name": "objects-service_listObjects",
+    "arguments": {}
+  }
+}
+
+### ============================================
+### Health Actuator
+### ============================================
+### 15. Health check
+GET http://localhost:8080/actuator/health
+Accept: application/json

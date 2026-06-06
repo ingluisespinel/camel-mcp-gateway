@@ -1,0 +1,88 @@
+openapi: "3.0.3"
+info:
+  title: "PokéAPI"
+  description: "RESTful API for Pokémon data"
+  version: "2.7.0"
+servers:
+  - url: "https://pokeapi.co/api/v2"
+paths:
+  /pokemon/{name}:
+    get:
+      operationId: "getPokemonByName"
+      summary: "Get Pokémon by name"
+      description: "Returns detailed information about a Pokémon by its name"
+      parameters:
+        - name: "name"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+          description: "Pokémon name (e.g. ditto, pikachu)"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pokemon"
+  /pokemon/{id}:
+    get:
+      operationId: "getPokemonById"
+      summary: "Get Pokémon by ID"
+      description: "Returns detailed information about a Pokémon by its ID number"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+          description: "Pokémon ID number (e.g. 132 for ditto)"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pokemon"
+  /pokemon:
+    get:
+      operationId: "listPokemon"
+      summary: "List Pokémon"
+      description: "Returns a paginated list of Pokémon"
+      parameters:
+        - name: "limit"
+          in: "query"
+          schema:
+            type: "integer"
+            default: 20
+          description: "Number of results per page"
+        - name: "offset"
+          in: "query"
+          schema:
+            type: "integer"
+            default: 0
+          description: "Offset for pagination"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: "object"
+components:
+  schemas:
+    Pokemon:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        base_experience:
+          type: "integer"
+        height:
+          type: "integer"
+        weight:
+          type: "integer"
+        order:
+          type: "integer"

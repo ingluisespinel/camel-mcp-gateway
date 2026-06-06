@@ -1,0 +1,153 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Objects REST API",
+    "description": "Simple objects REST API from restful-api.dev",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.restful-api.dev"
+    }
+  ],
+  "paths": {
+    "/objects": {
+      "get": {
+        "operationId": "listObjects",
+        "summary": "List all objects",
+        "description": "Returns a list of all objects, optionally filtered by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Object ID to filter",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createObject",
+        "summary": "Create a new object",
+        "description": "Creates a new object with the given payload",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObjectInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Object created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/objects/{id}": {
+      "get": {
+        "operationId": "getObjectById",
+        "summary": "Get object by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteObject",
+        "summary": "Delete an object",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Object deleted successfully"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Object": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "ObjectInput": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the object"
+          },
+          "data": {
+            "type": "object",
+            "description": "Arbitrary data associated with the object"
+          }
+        }
+      }
+    }
+  }
+}
